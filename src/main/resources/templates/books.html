@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookstore</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .pagination-item {
+            margin: 0 5px;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="container">
+        <h1 class="my-4">Bookstore</h1>
+        <a href="/logout" class="btn btn-primary mb-3">Logout</a>
+        <a href="/bookstore/add" class="btn btn-danger mb-3">Add Book</a>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Genre</th>
+                    <th>Author</th>
+                    <th>Price</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="book : ${listBooks}">
+                    <td th:text="${book.id}"></td>
+                    <td th:text="${book.title}"></td>
+                    <td th:text="${book.genre}"></td>
+                    <td th:text="${book.author}"></td>
+                    <td th:text="${book.price}"></td>
+                    <td>
+                        <a th:href="@{/bookstore/edit/{id}(id=${book.id})}" class="btn btn-warning btn-sm">Edit</a>
+                        <a th:href="@{/bookstore/delete/{id}(id=${book.id})}" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div th:if="${totalPages > 1}" class="pagination-container">
+            <span th:each="i : ${#numbers.sequence(1, totalPages)}" class="pagination-item">
+                <a th:if="${currentPage != i}" th:href="@{'/bookstore/' + ${i}}">[[${i}]]</a>
+                <span th:if="${currentPage == i}" th:text="${i}"></span>
+            </span>
+            <span class="pagination-item">
+                <a th:if="${currentPage < totalPages}" th:href="@{'/bookstore/' + ${currentPage + 1}}">Next</a>
+                <span th:unless="${currentPage < totalPages}">Next</span>
+            </span>
+            <span class="pagination-item">
+                <a th:if="${currentPage != totalPages}" th:href="@{'/bookstore/' + ${totalPages}}">Last</a>
+                <span th:if="${currentPage == totalPages}">Last</span>
+            </span>
+        </div>
+
+    </div>
+</body>
+</html>
+
